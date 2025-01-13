@@ -172,3 +172,24 @@ def train(generator, discriminator, dataloader, g_optimizer, d_optimizer, epochs
             
                     
     return d_loss_item, g_loss_item
+
+
+========================
+
+class PatchDiscriminator(nn.Module):
+    def __init__(self, input_channels):
+        super(PatchDiscriminator, self).__init__()
+        self.model = nn.Sequential(
+            nn.Conv2d(input_channels, 64, kernel_size=4, stride=2, padding=1),
+            nn.LeakyReLU(0.2),
+            nn.Conv2d(64, 128, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(128),
+            nn.LeakyReLU(0.2),
+            nn.Conv2d(128, 256, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(256),
+            nn.LeakyReLU(0.2),
+            nn.Conv2d(256, 1, kernel_size=4, stride=1, padding=1)  # Output single-channel feature map
+        )
+    
+    def forward(self, x):
+        return self.model(x)
