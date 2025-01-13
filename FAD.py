@@ -127,3 +127,48 @@ def validate(generator, dataloader, device):
     avg_lsd = np.mean(lsd_list)
 
     print(f"Validation Results - SNR: {avg_snr:.4f}, LSD: {avg_lsd:.4f}")
+    
+    
+
+===============================
+# Training Function
+def train(generator, discriminator, dataloader, g_optimizer, d_optimizer, epochs, device):
+    generator.train()
+    discriminator.train()
+    g_loss_item = 0
+    d_loss_item = 0
+
+    for epoch in range(epochs):
+        for i, (vocal, instrumental) in enumerate(dataloader):
+            vocal, instrumental = vocal.to(device), instrumental.to(device)
+
+            # Train Discriminator
+            d_optimizer.zero_grad()
+            real_data = torch.cat((vocal, instrumental), dim=1)
+            fake_data = torch.cat((vocal, generator(vocal)), dim=1)
+
+            real_loss = adversarial_loss(discriminator(real_data), torch.ones_like(discriminator(real_data)))
+            fake_loss = adversarial_loss(discriminator(fake_data), torch.zeros_like(discriminator(fake_data)))
+            d_loss = (real_loss + fake_loss) / 2
+
+            d_loss.backward()
+            d_optimizer.step()
+
+            # Train Generator
+            g_optimizer.zero_grad()
+            fake_data, mu, logvar = generator(vocal)
+            g_loss_adv = adversarial_loss(discriminator(torch.cat((vocal, fake_data), dim=1)), torch.ones_like(discriminator(torch.cat((vocal, fake_data), dim=1))))
+            g_loss_rec = reconstruction_loss(fake_data, instrumental)
+            g_loss = g_loss_adv + g_loss_rec
+
+            g_loss.backward()
+            g_optimizer.step()
+
+            if i % 10 == 0:
+                print(f"Epoch [{epoch+1}/{epochs}], Step [{i+1}/{len(dataloader)}], D Loss: {d_loss.item():.4f}, G Loss: {g_loss.item():.4f}")
+                
+            g_loss_item = g_loss.item()
+            d_loss_item = d_loss.item()
+            
+                    
+    return d_loss_item, g_loss_item

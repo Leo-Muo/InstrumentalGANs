@@ -1,0 +1,53 @@
+# Optimizers and learning rate schedulers 
+# g_optimizer = optim.Adam(generator.parameters(), lr=0.0002, betas=(0.5, 0.999))
+# d_optimizer = optim.Adam(discriminator.parameters(), lr=0.0002, betas=(0.5, 0.999))
+# g_scheduler = optim.lr_scheduler.StepLR(g_optimizer, step_size=20, gamma=0.5)
+# d_scheduler = optim.lr_scheduler.StepLR(d_optimizer, step_size=20, gamma=0.5)
+
+# # Faster initial learning with steeper decay
+# g_optimizer = optim.Adam(generator.parameters(), lr=0.001, betas=(0.5, 0.999))
+# d_optimizer = optim.Adam(discriminator.parameters(), lr=0.001, betas=(0.5, 0.999))
+# g_scheduler = optim.lr_scheduler.StepLR(g_optimizer, step_size=10, gamma=0.3)
+# d_scheduler = optim.lr_scheduler.StepLR(d_optimizer, step_size=10, gamma=0.3)
+
+# Slower, more stable learning
+# g_optimizer = optim.Adam(generator.parameters(), lr=0.0001, betas=(0.7, 0.999))
+# d_optimizer = optim.Adam(discriminator.parameters(), lr=0.0001, betas=(0.7, 0.999))
+# g_scheduler = optim.lr_scheduler.StepLR(g_optimizer, step_size=30, gamma=0.7)
+# d_scheduler = optim.lr_scheduler.StepLR(d_optimizer, step_size=30, gamma=0.7)
+
+# Different learning rates for generator and discriminator
+g_optimizer = optim.Adam(generator.parameters(), lr=0.0003, betas=(0.5, 0.999))
+d_optimizer = optim.Adam(discriminator.parameters(), lr=0.0001, betas=(0.5, 0.999))
+g_scheduler = optim.lr_scheduler.StepLR(g_optimizer, step_size=15, gamma=0.5)
+d_scheduler = optim.lr_scheduler.StepLR(d_optimizer, step_size=15, gamma=0.5)
+
+# Using cosine annealing instead of step scheduling
+# g_optimizer = optim.Adam(generator.parameters(), lr=0.0002, betas=(0.5, 0.999))
+# d_optimizer = optim.Adam(discriminator.parameters(), lr=0.0002, betas=(0.5, 0.999))
+# g_scheduler = optim.lr_scheduler.CosineAnnealingLR(g_optimizer, T_max=50, eta_min=1e-6)
+# d_scheduler = optim.lr_scheduler.CosineAnnealingLR(d_optimizer, T_max=50, eta_min=1e-6)
+
+# Using RMSprop instead of Adam
+# g_optimizer = optim.RMSprop(generator.parameters(), lr=0.0002, alpha=0.99)
+# d_optimizer = optim.RMSprop(discriminator.parameters(), lr=0.0002, alpha=0.99)
+# g_scheduler = optim.lr_scheduler.ExponentialLR(g_optimizer, gamma=0.97)
+# d_scheduler = optim.lr_scheduler.ExponentialLR(d_optimizer, gamma=0.97)
+
+# Using linear warm-up and reduce on plateau
+# g_optimizer = optim.Adam(generator.parameters(), lr=0.0001, betas=(0.5, 0.999))
+# d_optimizer = optim.Adam(discriminator.parameters(), lr=0.0001, betas=(0.5, 0.999))
+# g_scheduler = optim.lr_scheduler.ReduceLROnPlateau(g_optimizer, mode='min', factor=0.5, patience=5)
+# d_scheduler = optim.lr_scheduler.ReduceLROnPlateau(d_optimizer, mode='min', factor=0.5, patience=5)
+
+# Multiple learning rate drops at specific milestones
+# g_optimizer = optim.Adam(generator.parameters(), lr=0.0004, betas=(0.5, 0.999))
+# d_optimizer = optim.Adam(discriminator.parameters(), lr=0.0004, betas=(0.5, 0.999))
+# g_scheduler = optim.lr_scheduler.MultiStepLR(g_optimizer, milestones=[10, 20, 30], gamma=0.5)
+# d_scheduler = optim.lr_scheduler.MultiStepLR(d_optimizer, milestones=[10, 20, 30], gamma=0.5)
+
+# Cyclic learning rate strategy
+# g_optimizer = optim.Adam(generator.parameters(), lr=0.0001, betas=(0.5, 0.999))
+# d_optimizer = optim.Adam(discriminator.parameters(), lr=0.0001, betas=(0.5, 0.999))
+# g_scheduler = optim.lr_scheduler.CyclicLR(g_optimizer, base_lr=0.0001, max_lr=0.001, step_size_up=2000)
+# d_scheduler = optim.lr_scheduler.CyclicLR(d_optimizer, base_lr=0.0001, max_lr=0.001, step_size_up=2000)
